@@ -87,7 +87,7 @@ h2{
 
 }
 .information__tag{
-    margin-top: 3rem;
+    
     color: var(--rose300);
 }
 .information__name{
@@ -96,6 +96,7 @@ h2{
 .information__price{
     color: var(--red);
     font-weight: 700;
+    margin-bottom: 2rem;
 }
 .product__button{
     border: 1px solid var(--rose500);
@@ -134,7 +135,7 @@ h2{
     height: 1.5rem;
     width: 1.5rem;
     position: absolute;
-    display: block;
+    display: inline;
    
     border: 1px solid var(--rose100);
     border-radius: 50%;
