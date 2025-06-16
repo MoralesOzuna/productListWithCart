@@ -187,6 +187,8 @@ h2{
         margin-top: -3rem;
     }
 }
+
+
 .cart__message, .cart__title{
     
     text-align: center;
@@ -218,8 +220,13 @@ h2{
 }
 .purchase{
     padding-bottom: 2rem;
+    position: relative;
 }
-
+.purchase__icon{
+    position: absolute;
+    right: 10%;
+    bottom: 60%;
+}
 .purchase__name{
     font-weight: var(--fontWeight600);
 }
@@ -243,4 +250,9 @@ h2{
 .purchase__subtotal{
     color: var(--rose900);
     font-weight: var(--fontWeigh400);
+}
+.purchase__icon{
+    border-radius: 50%;
+    height: 2rem;
+    border: .3rem solid var(--rose300);
 }

@@ -143,7 +143,10 @@ UI.prototype.addButton = function(){
                     addtoCartButton.style.display = 'block';
                     quantityAmount.textContent = 1;
                     cartTotal = cartTotal.filter(producto => producto !== cartItem);
+                    document.querySelector('.cart__image').style.display = 'block';
+                    document.querySelector('.cart__message').style.display = 'block';
                     ui.cartHTML();
+                 
 
                 }
                 }
@@ -198,13 +201,15 @@ UI.prototype.cartHTML = function(){
     let totalItems = 0;
 
 
-    cartImage.style.display = 'none'
-    cartMessage.style.display = 'none';
- 
-
+    if(cartTotal != ''){
+        cartImage.style.display = 'none'
+        cartMessage.style.display = 'none';
+    }
 
     if(cartItem.querySelectorAll('.purchase')){
         cartItem.querySelectorAll('.purchase').forEach(el => el.remove());
+        
+ 
     }
     
 
@@ -214,7 +219,6 @@ UI.prototype.cartHTML = function(){
 
     const cartNumber = document.querySelector('.cart__number');
     cartNumber.textContent = totalItems;
-
 
     const purchase = document.createElement('li');
     purchase.classList.add('purchase');
@@ -238,44 +242,68 @@ UI.prototype.cartHTML = function(){
     total += product.subtotal;
     const purchaseTotal = document.createElement('P');
     purchaseTotal.textContent = `$${total}` 
-    purchaseTotal.classList.add('purchase__total')
+    purchaseTotal.classList.add('purchase__total');
+
+
+    const purchaseQuit = document.createElement('IMG');
+    purchaseQuit.src = '../assets/images/icon-remove-item.svg';
+    purchaseQuit.classList.add('purchase__icon');
+
+
+    purchaseQuit.addEventListener('click', () =>{
+        
+       
+        let productQuit = purchaseQuit.parentElement.firstChild.textContent;
+
+        const articles = document.querySelectorAll('.product');
+
+
+        cartTotal = cartTotal.filter( product => product.name != productQuit)
+        
+        
+         articles.forEach( article =>{
+            if(article.querySelector('.information__name').textContent == productQuit){
+
+                article.querySelector('.information__name').parentElement.previousElementSibling.children[1].style.display = 'block';
+                article.querySelector('.information__name').parentElement.previousElementSibling.lastElementChild.firstChild.textContent = 1;
+                article.querySelector('.information__name').parentElement.previousElementSibling.lastElementChild.style.display = 'none';
+            }
+        })
+
+     
+        ui.cartHTML();
+        if(cartTotal == ''){
+        cartNumber.textContent = '0';
+        cartImage.style.display = 'block'
+        cartMessage.style.display = 'block';
+    }
+
+
+       /*  cartTotal = cartTotal.filter() */
+    
+  
+    })
 
 
 
-
-
+  
     purchase.appendChild(purchaseName);
     purchase.appendChild(purchaseNumber);
     purchase.appendChild(purchasePrice);
     purchase.appendChild(purchaseSubtotal);
     purchase.appendChild(purchaseTotal);
-
+    purchase.appendChild(purchaseQuit);
     
    /*  purchase.classList.add('purchase__name');
     purchase.textContent = product.name; */
     
     cartItem.appendChild(purchase)
 
-
-
-
-
-
   })
   
-
-
-
-
-
-     
-    
-    
-   
-
-
-    
 }
+
+
 
 addEventListener('DOMContentLoaded', () =>{
     ui.loadProducts();
