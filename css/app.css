@@ -256,3 +256,18 @@ h2{
     height: 2rem;
     border: .3rem solid var(--rose300);
 }
+
+/* Total */
+.totalContainer{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.totalText{
+
+}
+.totalCart{
+    color: var(--rose900);
+    font-weight: var(--fontWeight600);
+    font-size: 2.5rem;
+}

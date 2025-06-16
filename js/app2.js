@@ -177,7 +177,7 @@ getProduct = function(article) {
     const infoProduct = {
         name: article.querySelector('.information__name').textContent,
         category: article.querySelector('.information__tag').textContent,
-        price: parseFloat(article.querySelector('.information__price').textContent.replace(/[^0-9.]/g, '')),
+        price: parseFloat(article.querySelector('.information__price').textContent.replace(/[^0-9.]/g, '')).toFixed(2),
         number: 1
     }
 
@@ -216,6 +216,7 @@ UI.prototype.cartHTML = function(){
    cartTotal.forEach(product =>{
 
     totalItems += product.number;
+    
 
     const cartNumber = document.querySelector('.cart__number');
     cartNumber.textContent = totalItems;
@@ -240,24 +241,19 @@ UI.prototype.cartHTML = function(){
     purchaseSubtotal.classList.add('purchase__subtotal');
 
     total += product.subtotal;
+    /* 
     const purchaseTotal = document.createElement('P');
     purchaseTotal.textContent = `$${total}` 
-    purchaseTotal.classList.add('purchase__total');
+    purchaseTotal.classList.add('purchase__total'); */
 
 
     const purchaseQuit = document.createElement('IMG');
     purchaseQuit.src = '../assets/images/icon-remove-item.svg';
     purchaseQuit.classList.add('purchase__icon');
 
-
     purchaseQuit.addEventListener('click', () =>{
-        
-       
         let productQuit = purchaseQuit.parentElement.firstChild.textContent;
-
         const articles = document.querySelectorAll('.product');
-
-
         cartTotal = cartTotal.filter( product => product.name != productQuit)
         
         
@@ -270,39 +266,66 @@ UI.prototype.cartHTML = function(){
             }
         })
 
-     
-        ui.cartHTML();
         if(cartTotal == ''){
         cartNumber.textContent = '0';
         cartImage.style.display = 'block'
         cartMessage.style.display = 'block';
-    }
 
-
-       /*  cartTotal = cartTotal.filter() */
-    
+     
+        ui.cartHTML();
+    } /* Evento purchaseQuit */
   
     })
 
-
-
+    
   
     purchase.appendChild(purchaseName);
     purchase.appendChild(purchaseNumber);
     purchase.appendChild(purchasePrice);
     purchase.appendChild(purchaseSubtotal);
-    purchase.appendChild(purchaseTotal);
+    /* purchase.appendChild(purchaseTotal); */
     purchase.appendChild(purchaseQuit);
     
    /*  purchase.classList.add('purchase__name');
     purchase.textContent = product.name; */
     
-    cartItem.appendChild(purchase)
+    cartItem.appendChild(purchase);
+
+    ui.createTotal(total);
 
   })
   
 }
 
+UI.prototype.createTotal = function(total){
+    total = total.toFixed(2);
+
+    if(document.querySelector('.totalCart') || document.querySelector('.totalText')){
+        document.querySelector('.totalCart').remove();
+        document.querySelector('.totalText').remove();
+
+    }
+
+
+
+    const cart = document.querySelector('.cart');
+
+    const totalContainer = document.createElement('DIV');
+    totalContainer.classList.add('totalContainer')
+
+    totalText = document.createElement('p');
+    totalText.textContent = 'Order Total';
+    totalText.classList.add('totalText')
+    totalContainer.appendChild(totalText);
+
+
+    let totalCart = document.createElement('p');
+    totalCart.classList.add('totalCart')
+    totalCart.textContent = `$${total}`;
+    totalContainer.appendChild(totalCart);
+
+    cart.appendChild(totalContainer);
+}
 
 
 addEventListener('DOMContentLoaded', () =>{
