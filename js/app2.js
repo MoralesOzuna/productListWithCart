@@ -12,7 +12,7 @@ function Cart(name, category, number, price, subtotal, total){
     this.number = number;
     this.price = price;
     this.subtotal = this.number * this.price;
-    this.total =+ this.subtotal;
+   
 }
 function UI(){
 
@@ -22,7 +22,7 @@ UI.prototype.loadProducts = function (){
     const container = document.querySelector('.products');
     container.innerHTML = '';
 
-
+    /* products is from the json archive */
     products.forEach(product => {
         //Destructuring de objetos
         const {category, name, price, image} = product;
@@ -68,18 +68,14 @@ UI.prototype.addButton = function(){
         addtoCartButton.addEventListener('click', () =>{
             //Dissapear add to cart button to create the new one
             addtoCartButton.style.display = 'none';
-            
+    
             const imgContainer = article.querySelector('.img-container');
             const quantityButtonExist = imgContainer.querySelector('.product__button--active');
 
             //If button exist we don't create a new one instead just display the inline style atrribuite
             if(quantityButtonExist){  
                 quantityButtonExist.style.display = 'inline';
-                getProduct(article);
-                cartTotal.forEach(producto=>{
-                    producto.number = 1;
-                   
-                 })
+              
            
             }
 
@@ -121,10 +117,10 @@ UI.prototype.addButton = function(){
                 const cartItem = cartTotal.find(producto => producto.name == name);
                 
                 if(cartItem){
-
                     cartItem.increment();
                     ui.cartHTML();
                     quantityAmount.textContent = cartItem.number;
+                 
                 }
             })
 
@@ -145,10 +141,13 @@ UI.prototype.addButton = function(){
                     cartTotal = cartTotal.filter(producto => producto !== cartItem);
                     document.querySelector('.cart__image').style.display = 'block';
                     document.querySelector('.cart__message').style.display = 'block';
-                    ui.cartHTML();
+                    document.querySelector('.totalText').remove();
+                    document.querySelector('.totalCart').remove();
+                    document.querySelector('.totalContainer').remove();
+                    document.querySelector('.confirmButton').remove();
                  
-
-                }
+                    }
+                    ui.cartHTML();
                 }
 
             })
@@ -172,6 +171,8 @@ Cart.prototype.decrement = function(){
 }
 
 getProduct = function(article) { 
+
+    //esto esta bien
     /* la funcion getProduct está tomando datos del HTML y luego creando un nuevo objeto Cart con esos datos. Eso no tiene sentido que sea un método de Cart.prototype, porque aún no tienes ningún Cart. De hecho, lo usas para crear uno. */
 
     const infoProduct = {
@@ -181,13 +182,21 @@ getProduct = function(article) {
         number: 1
     }
 
-    const cartItem =  new Cart(infoProduct.name, infoProduct.category, infoProduct.number, infoProduct.price);
-  
-   
-  
-    cartTotal.push(cartItem);    
+    const exist = cartTotal.find(product => product.name === infoProduct.name);
 
-    ui.cartHTML();
+    if(!exist){
+    const cartItem =  new Cart(infoProduct.name, infoProduct.category, infoProduct.number, infoProduct.price);
+
+    //Aqui agregamos el primer CartTotal
+    cartTotal.push(cartItem);    
+        ui.cartHTML();
+        console.log(cartTotal);
+    }
+
+   
+
+
+
     
 }
 
@@ -206,8 +215,8 @@ UI.prototype.cartHTML = function(){
         cartMessage.style.display = 'none';
     }
 
-    if(cartItem.querySelectorAll('.purchase')){
-        cartItem.querySelectorAll('.purchase').forEach(el => el.remove());
+    if(cartList.querySelectorAll('.purchase')){
+        cartList.querySelectorAll('.purchase').forEach(el => el.remove());
         
  
     }
@@ -252,17 +261,24 @@ UI.prototype.cartHTML = function(){
     purchaseQuit.classList.add('purchase__icon');
 
     purchaseQuit.addEventListener('click', () =>{
+        //get the name of the product
         let productQuit = purchaseQuit.parentElement.firstChild.textContent;
+
+        //seleccionamos todos los productos
         const articles = document.querySelectorAll('.product');
-        cartTotal = cartTotal.filter( product => product.name != productQuit)
-        
-        
+        //filter all the products of cartTotal.name that are diferent compared to productQuit, 
+        cartTotal = cartTotal.filter( product => product.name != productQuit);
+              ui.cartHTML();
+
+
          articles.forEach( article =>{
             if(article.querySelector('.information__name').textContent == productQuit){
 
+                //Reiniciamos los valores de los botones
                 article.querySelector('.information__name').parentElement.previousElementSibling.children[1].style.display = 'block';
                 article.querySelector('.information__name').parentElement.previousElementSibling.lastElementChild.firstChild.textContent = 1;
                 article.querySelector('.information__name').parentElement.previousElementSibling.lastElementChild.style.display = 'none';
+
             }
         })
 
@@ -270,7 +286,9 @@ UI.prototype.cartHTML = function(){
         cartNumber.textContent = '0';
         cartImage.style.display = 'block'
         cartMessage.style.display = 'block';
-
+        document.querySelector('.totalText').remove();
+        document.querySelector('.totalCart').remove();
+        document.querySelector('.confirmButton').remove();
      
         ui.cartHTML();
     } /* Evento purchaseQuit */
@@ -292,9 +310,12 @@ UI.prototype.cartHTML = function(){
     cartItem.appendChild(purchase);
 
     ui.createTotal(total);
+    ui.createButton();
+    
 
   })
-  
+
+  document.querySelector('.confirmButton__button').addEventListener('click', () => ui.orderConfirmation(cartTotal));
 }
 
 UI.prototype.createTotal = function(total){
@@ -303,10 +324,9 @@ UI.prototype.createTotal = function(total){
     if(document.querySelector('.totalCart') || document.querySelector('.totalText')){
         document.querySelector('.totalCart').remove();
         document.querySelector('.totalText').remove();
+        document.querySelector('.totalContainer').remove();
 
     }
-
-
 
     const cart = document.querySelector('.cart');
 
@@ -324,7 +344,64 @@ UI.prototype.createTotal = function(total){
     totalCart.textContent = `$${total}`;
     totalContainer.appendChild(totalCart);
 
-    cart.appendChild(totalContainer);
+    /* cart.appendChild(totalContainer); */
+    cart.insertBefore(totalContainer, document.querySelector('.confirmButton'))
+    
+}
+
+UI.prototype.createButton = function(){
+    const buttonContainer = document.createElement('div');
+    buttonContainer.classList.add('confirmButton');
+
+    if(document.querySelector('.confirmButton')){
+      
+        buttonContainer.style.display = 'inline';
+    } else{
+        buttonContainer.innerHTML = `
+            <p class = confirmButton__text> This is a <span> carbon-neutral</span> delivery </p>
+            <button class = confirmButton__button> Confirm Order </button>
+            `
+
+      
+            document.querySelector('.cart').appendChild(buttonContainer);
+
+    }
+
+    
+    confirmButton = document.querySelector('.confirmButton__button');
+        
+}
+UI.prototype.orderConfirmation = function(CartTotal){
+    
+    
+    const orderDiv = document.createElement('DIV');
+    orderDiv.classList.add('.order');
+    storeDiv = document.querySelector('.store');
+
+    orderDiv.innerHTML = `
+
+    <img class = order__icon src = '../assets/images/icon-order-confirmed.svg'>
+    <h2 class = order__title> Order Confirmed </h2>
+    <p class = order__text> We hope you enjoy your food! </p>
+    `
+    const productsDiv = document.createElement('DIV');
+    productsDiv.classList.add('.order__item');
+    CartTotal.forEach(producto=>{
+        productsDiv.innerHTML = `
+            <div class = order__item> 
+                <h3 class = order__name> ${producto.name} </h3> 
+            
+            </div>
+        `
+
+  
+    }) 
+    
+
+    storeDiv.appendChild(orderDiv);
+    orderDiv.appendChild(productsDiv);
+
+
 }
 
 
