@@ -75,8 +75,9 @@ UI.prototype.addButton = function(){
             //If button exist we don't create a new one instead just display the inline style atrribuite
             if(quantityButtonExist){  
                 quantityButtonExist.style.display = 'inline';
-              
-           
+               
+                getProduct(article);
+       
             }
 
             //Create a new button if doesn't exist
@@ -109,7 +110,6 @@ UI.prototype.addButton = function(){
                 quantityButton.appendChild(quantityAdd);
 
                 getProduct(article);
-                
 
             quantityAdd.addEventListener('click', () =>{
                 const name = article.querySelector('.information__name').textContent;
@@ -120,6 +120,7 @@ UI.prototype.addButton = function(){
                     cartItem.increment();
                     ui.cartHTML();
                     quantityAmount.textContent = cartItem.number;
+                
                  
                 }
             })
@@ -190,14 +191,9 @@ getProduct = function(article) {
     //Aqui agregamos el primer CartTotal
     cartTotal.push(cartItem);    
         ui.cartHTML();
-        console.log(cartTotal);
-    }
+     
 
-   
-
-
-
-    
+    }    
 }
 
 UI.prototype.cartHTML = function(){
@@ -292,6 +288,7 @@ UI.prototype.cartHTML = function(){
      
         ui.cartHTML();
     } /* Evento purchaseQuit */
+    
   
     })
 
@@ -311,12 +308,12 @@ UI.prototype.cartHTML = function(){
 
     ui.createTotal(total);
     ui.createButton();
-    
 
   })
-
-  document.querySelector('.confirmButton__button').addEventListener('click', () => ui.orderConfirmation(cartTotal));
 }
+
+
+
 
 UI.prototype.createTotal = function(total){
     total = total.toFixed(2);
@@ -368,13 +365,23 @@ UI.prototype.createButton = function(){
     }
 
     
-    confirmButton = document.querySelector('.confirmButton__button');
+    const confirmButton = document.querySelector('.confirmButton__button');
+
+    /* confirmButton.addEventListener('click', ()=> ui.orderConfirmation()) */
+
+
+    const newConfirmButton = confirmButton.cloneNode(true);
+    confirmButton.parentNode.replaceChild(newConfirmButton, confirmButton)
+    newConfirmButton.addEventListener('click', () => ui.orderConfirmation());
         
 }
-UI.prototype.orderConfirmation = function(CartTotal){
-    
-    
-    const orderDiv = document.createElement('DIV');
+
+UI.prototype.orderConfirmation = function(){
+console.log(cartTotal)
+
+
+
+ /*    const orderDiv = document.createElement('DIV');
     orderDiv.classList.add('.order');
     storeDiv = document.querySelector('.store');
 
@@ -386,7 +393,7 @@ UI.prototype.orderConfirmation = function(CartTotal){
     `
     const productsDiv = document.createElement('DIV');
     productsDiv.classList.add('.order__item');
-    CartTotal.forEach(producto=>{
+    cartTotal.forEach(producto=>{
         productsDiv.innerHTML = `
             <div class = order__item> 
                 <h3 class = order__name> ${producto.name} </h3> 
@@ -399,7 +406,7 @@ UI.prototype.orderConfirmation = function(CartTotal){
     
 
     storeDiv.appendChild(orderDiv);
-    orderDiv.appendChild(productsDiv);
+    orderDiv.appendChild(productsDiv); */
 
 
 }
