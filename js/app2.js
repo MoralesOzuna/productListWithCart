@@ -357,9 +357,7 @@ UI.prototype.createButton = function(){
         buttonContainer.innerHTML = `
             <p class = confirmButton__text> This is a <span> carbon-neutral</span> delivery </p>
             <button class = confirmButton__button> Confirm Order </button>
-            `
-
-      
+            `      
             document.querySelector('.cart').appendChild(buttonContainer);
 
     }
@@ -367,8 +365,23 @@ UI.prototype.createButton = function(){
     
     const confirmButton = document.querySelector('.confirmButton__button');
 
-    /* confirmButton.addEventListener('click', ()=> ui.orderConfirmation()) */
+        /* 2. const newConfirmButton = confirmButton.cloneNode(true);
+            Clona el botón:
+            cloneNode(true) clona el nodo con todos sus hijos y atributos.
+            El nuevo botón (newConfirmButton) es idéntico visualmente al original.
+            ⚠️No copia los event listeners (esto es la clave de este truco). */
 
+        /* 3. confirmButton.parentNode.replaceChild(newConfirmButton, confirmButton);
+            Reemplaza el botón original con el clon:
+
+            confirmButton.parentNode accede al padre del botón.
+
+            replaceChild(nuevo, viejo) sustituye el botón original (confirmButton) con el clon (newConfirmButton).
+
+            Como el clon no tiene ningún evento, se eliminan todos los listeners anteriores.
+
+            4. newConfirmButton.addEventListener('click', () => ui.orderConfirmation());
+            Ahora se añade un único listener limpio al nuevo botón. */
 
     const newConfirmButton = confirmButton.cloneNode(true);
     confirmButton.parentNode.replaceChild(newConfirmButton, confirmButton)
@@ -377,7 +390,101 @@ UI.prototype.createButton = function(){
 }
 
 UI.prototype.orderConfirmation = function(){
-console.log(cartTotal)
+
+    const orderDiv = document.createElement('DIV');
+    orderDiv.classList.add('order');
+
+    store = document.querySelector('.store');
+
+    orderDiv.innerHTML = `
+
+        <img class = order__icon src = '../assets/images/icon-order-confirmed.svg'>
+        <h2 class = 'order__title'> Order Confirmed </h2>
+        <p class = 'order__text'> We hope you enjoy your food!>
+
+    `
+    const orderProducts = document.createElement('div');
+    orderProducts.classList.add('.confirmed');
+
+    let total = 0;
+
+
+    cartTotal.forEach(product =>{
+        
+
+
+        total += product.subtotal;
+
+
+        orderProducts.innerHTML += `
+            <div class = confirmed__container>
+                <h3 class = "confirmed__title"> ${product.name} </h3>
+                <p class = "confirmed__number"> ${product.number} </p>
+                <p class = "confirmed__price"> ${product.price} </p>
+                <p class = "confirmed__subtotal"> ${product.subtotal} <p>
+            </div>
+        `
+
+
+        orderDiv.appendChild(orderProducts);
+    });
+
+    products.forEach(productJson =>{
+        console.log(productJson.name);
+        const productoConfirmado = document.querySelector('.confirmed__title');
+        console.log(productoConfirmado)
+    })
+
+    const totalContainer = document.createElement('DIV');
+    totalContainer.innerHTML = `
+        <div class = confirmed__total>
+                <p> Order Total </p>
+                <p> $${total} </p> 
+        </div> 
+    `
+
+    orderProducts.appendChild(totalContainer)
+
+
+
+
+    console.log(total);
+
+    store.appendChild(orderDiv);
+
+
+
+/*   products.forEach(product => {
+        //Destructuring de objetos
+        const {category, name, price, image} = product;
+        const article = document.createElement('article');     
+        article.classList.add('product'); 
+
+        article.innerHTML = `
+        <div class = "img-container">
+
+            <picture>
+                <source media="(min-width: 1024px)" srcset="${image.desktop}">
+                <source media="(min-width: 768px)" srcset="${image.tablet}">
+                <img src="${image.mobile}" alt="product">
+            </picture>
+        
+            <button class =  "product__button">
+                <img src = "../assets/images/icon-add-to-cart.svg" alt = "Cart icon">Add to Cart     
+            </button>
+        </div>
+
+        <div class = "information">
+            <p class = "information__tag"> ${category} </p>
+            <h2 class = "information__name"> ${name} </h2>
+            <p class = "information__price"> $${price.toFixed(2)}</p>        
+        </div>
+        `
+
+        container.appendChild(article);
+ */
+
+
 
 
 
