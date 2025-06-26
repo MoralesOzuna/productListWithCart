@@ -418,7 +418,7 @@ UI.prototype.orderConfirmation = function(){
 
         orderProducts.innerHTML += `
             <div class = confirmed__container>
-                <h3 class = "confirmed__title"> ${product.name} </h3>
+                <h3 class ="confirmed__title"> ${product.name} </h3>
                 <p class = "confirmed__number"> ${product.number} </p>
                 <p class = "confirmed__price"> ${product.price} </p>
                 <p class = "confirmed__subtotal"> ${product.subtotal} <p>
@@ -429,11 +429,7 @@ UI.prototype.orderConfirmation = function(){
         orderDiv.appendChild(orderProducts);
     });
 
-    products.forEach(productJson =>{
-        console.log(productJson.name);
-        const productoConfirmado = document.querySelector('.confirmed__title');
-        console.log(productoConfirmado)
-    })
+
 
     const totalContainer = document.createElement('DIV');
     totalContainer.innerHTML = `
@@ -444,76 +440,21 @@ UI.prototype.orderConfirmation = function(){
     `
 
     orderProducts.appendChild(totalContainer)
-
-
-
-
-    console.log(total);
-
     store.appendChild(orderDiv);
 
-
-
-/*   products.forEach(product => {
-        //Destructuring de objetos
-        const {category, name, price, image} = product;
-        const article = document.createElement('article');     
-        article.classList.add('product'); 
-
-        article.innerHTML = `
-        <div class = "img-container">
-
-            <picture>
-                <source media="(min-width: 1024px)" srcset="${image.desktop}">
-                <source media="(min-width: 768px)" srcset="${image.tablet}">
-                <img src="${image.mobile}" alt="product">
-            </picture>
-        
-            <button class =  "product__button">
-                <img src = "../assets/images/icon-add-to-cart.svg" alt = "Cart icon">Add to Cart     
-            </button>
-        </div>
-
-        <div class = "information">
-            <p class = "information__tag"> ${category} </p>
-            <h2 class = "information__name"> ${name} </h2>
-            <p class = "information__price"> $${price.toFixed(2)}</p>        
-        </div>
-        `
-
-        container.appendChild(article);
- */
-
-
-
-
-
- /*    const orderDiv = document.createElement('DIV');
-    orderDiv.classList.add('.order');
-    storeDiv = document.querySelector('.store');
-
-    orderDiv.innerHTML = `
-
-    <img class = order__icon src = '../assets/images/icon-order-confirmed.svg'>
-    <h2 class = order__title> Order Confirmed </h2>
-    <p class = order__text> We hope you enjoy your food! </p>
-    `
-    const productsDiv = document.createElement('DIV');
-    productsDiv.classList.add('.order__item');
-    cartTotal.forEach(producto=>{
-        productsDiv.innerHTML = `
-            <div class = order__item> 
-                <h3 class = order__name> ${producto.name} </h3> 
-            
-            </div>
-        `
-
-  
-    }) 
     
+    products.forEach(productJs =>{
+     
+           const confirmedName = document.querySelector('.confirmed__title').textContent.trim();
+           /* console.log(confirmedName);
+           console.log(productJs.name); */
 
-    storeDiv.appendChild(orderDiv);
-    orderDiv.appendChild(productsDiv); */
+           if(confirmedName == productJs.name){
+            console.log(productJs.image.thumbnail)
+           }
+    })
+
+
 
 
 }
