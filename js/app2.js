@@ -390,73 +390,67 @@ UI.prototype.createButton = function(){
 }
 
 UI.prototype.orderConfirmation = function(){
-
     const orderDiv = document.createElement('DIV');
     orderDiv.classList.add('order');
 
-    store = document.querySelector('.store');
-
     orderDiv.innerHTML = `
-
         <img class = order__icon src = '../assets/images/icon-order-confirmed.svg'>
         <h2 class = 'order__title'> Order Confirmed </h2>
         <p class = 'order__text'> We hope you enjoy your food!>
 
     `
     const orderProducts = document.createElement('div');
-    orderProducts.classList.add('.confirmed');
+    orderProducts.classList.add('confirmed');
 
     let total = 0;
 
-
     cartTotal.forEach(product =>{
-        
-
-
         total += product.subtotal;
-
-
         orderProducts.innerHTML += `
             <div class = confirmed__container>
                 <h3 class ="confirmed__title"> ${product.name} </h3>
-                <p class = "confirmed__number"> ${product.number} </p>
-                <p class = "confirmed__price"> ${product.price} </p>
-                <p class = "confirmed__subtotal"> ${product.subtotal} <p>
+                <p class = "confirmed__number"> ${product.number}x </p>
+                <p class = "confirmed__price"> @ ${product.price} </p>
+                <p class = "confirmed__subtotal"> $${product.subtotal.toFixed(2)} <p>
             </div>
         `
-
-
         orderDiv.appendChild(orderProducts);
     });
 
-
-
     const totalContainer = document.createElement('DIV');
+    totalContainer.classList.add('confirmed__total-Div')
     totalContainer.innerHTML = `
         <div class = confirmed__total>
-                <p> Order Total </p>
-                <p> $${total} </p> 
+                <p class = 'confirmed__totalText'> Order Total </p>
+                <p class = 'confirmed__totalQuantity'> $${total} </p> 
         </div> 
     `
-
+    store = document.querySelector('.store');
+    main = document.querySelector('.main')
     orderProducts.appendChild(totalContainer)
-    store.appendChild(orderDiv);
+    main.appendChild(orderDiv);
 
     
-    products.forEach(productJs =>{
-     
-           const confirmedName = document.querySelector('.confirmed__title').textContent.trim();
-           /* console.log(confirmedName);
-           console.log(productJs.name); */
+    const confirmedName = document.querySelectorAll('.confirmed__title');
+    confirmedName.forEach(name =>{
+        products.forEach(data =>{
+           
 
-           if(confirmedName == productJs.name){
-            console.log(productJs.image.thumbnail)
-           }
+            if(name.textContent.trim() == data.name){
+                const parentDiv = name.parentElement;
+                const orderThumbail = document.createElement('IMG');
+                orderThumbail.classList.add('confirmed__image')
+                orderThumbail.src = data.image.thumbnail;
+                parentDiv.appendChild(orderThumbail);
+            }
+        })
     })
 
+    const productsDiv = document.querySelector('.products');
+    const asideDiv = document.querySelector('.cart');
 
-
-
+    productsDiv.style.display = 'none';
+    asideDiv.style.display = 'none';
 }
 
 
