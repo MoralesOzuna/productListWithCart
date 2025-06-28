@@ -434,8 +434,6 @@ UI.prototype.orderConfirmation = function(){
     const confirmedName = document.querySelectorAll('.confirmed__title');
     confirmedName.forEach(name =>{
         products.forEach(data =>{
-           
-
             if(name.textContent.trim() == data.name){
                 const parentDiv = name.parentElement;
                 const orderThumbail = document.createElement('IMG');
@@ -446,11 +444,43 @@ UI.prototype.orderConfirmation = function(){
         })
     })
 
+    const buttonNewOrden = document.createElement('BUTTON');
+    buttonNewOrden.classList.add('button__confirmed', 'confirmButton__button');
+    buttonNewOrden.textContent = 'Start New Order';
+
+    buttonNewOrden.addEventListener('click', ()=> ui.resetPage(orderDiv))
+
+
+
     const productsDiv = document.querySelector('.products');
     const asideDiv = document.querySelector('.cart');
+    orderDiv.appendChild(buttonNewOrden);
+
 
     productsDiv.style.display = 'none';
     asideDiv.style.display = 'none';
+
+
+}
+
+
+UI.prototype.resetPage = function(order, store){
+
+
+    const spinnerDiv = document.createElement('div');
+    spinnerDiv.classList.add('spinner');
+    spinnerDiv.innerHTML = `
+      <div class="double-bounce1"></div>
+    <div class="double-bounce2"></div>
+    `
+
+    setTimeout(() =>{
+        spinnerDiv.remove();
+        order.remove();
+        store.style.display = 'block';
+    },3000)
+
+    order.appendChild(spinnerDiv);
 }
 
 
