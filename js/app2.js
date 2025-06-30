@@ -448,7 +448,7 @@ UI.prototype.orderConfirmation = function(){
     buttonNewOrden.classList.add('button__confirmed', 'confirmButton__button');
     buttonNewOrden.textContent = 'Start New Order';
 
-    buttonNewOrden.addEventListener('click', ()=> ui.resetPage(orderDiv))
+    buttonNewOrden.addEventListener('click', ()=> ui.resetPage(orderDiv, productsDiv, asideDiv))
 
 
 
@@ -464,7 +464,7 @@ UI.prototype.orderConfirmation = function(){
 }
 
 
-UI.prototype.resetPage = function(order, store){
+UI.prototype.resetPage = function(order, productsDiv, asideDiv){
 
 
     const spinnerDiv = document.createElement('div');
@@ -477,10 +477,24 @@ UI.prototype.resetPage = function(order, store){
     setTimeout(() =>{
         spinnerDiv.remove();
         order.remove();
-        store.style.display = 'block';
+        cartTotal = [];
+        ui.resetNumbers();
+        ui.loadProducts();
+        ui.cartHTML();
+        productsDiv.style.display = 'grid';
+        asideDiv.style.display = 'block';
     },3000)
 
     order.appendChild(spinnerDiv);
+}
+
+UI.prototype.resetNumbers = function(){
+    document.querySelector('.cart__number').textContent = 0;
+    document.querySelector('.totalContainer').remove();
+    document.querySelector('.confirmButton').remove();
+
+    document.querySelector('.cart__image').style.display = 'block';
+    document.querySelector('.cart__message').style.display = 'block';
 }
 
 
@@ -493,3 +507,4 @@ addEventListener('DOMContentLoaded', () =>{
 Creamos una instancia de la funcion constructora. 
 */
 const ui = new UI();
+ 
