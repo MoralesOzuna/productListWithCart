@@ -334,6 +334,24 @@ h2{
     margin-top: 2rem;
     padding: 2rem;
 }
+
+@media (min-width: 768px){
+    .main{
+        position: relative;
+    }
+    .store-filter{
+    filter: grayscale(0.5) blur(10px); 
+    
+    }
+    .order{
+        position: absolute;
+        width: 40%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 2rem;
+    }
+}
 .confirmed__container{
     display: grid;
     grid-template-columns: 20% 10% 10% 40% 20%;
@@ -399,7 +417,7 @@ h2{
   height: 40px;
 
   position: relative;
-  margin: 100px auto;
+  margin: 2rem auto;
 }
 
 .double-bounce1, .double-bounce2 {

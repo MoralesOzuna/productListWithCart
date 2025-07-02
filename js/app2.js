@@ -1,28 +1,29 @@
-/* Constructores 
-
-Es una función especial que se utiliza para crear nuevos objetos con una misma estructura.
+/* Constructors is a kind of special function that help us to create new objects using the same structure
+Los constructores son funciones especiales que se utilizan para crear nuevos objetos con una misma estructura.
 */
-
-
-let cartTotal = [];
-
-function Cart(name, category, number, price, subtotal, total){
+function Cart(name, category, number, price){
     this.name = name;
     this.category = category;
     this.number = number;
     this.price = price;
     this.subtotal = this.number * this.price;
-   
+
 }
 function UI(){
 
 }
+
+let cartTotal = [];
+
+
 /* Load the products from database.js to UI */
 UI.prototype.loadProducts = function (){
     const container = document.querySelector('.products');
+
+    //if container have content, inner.HTML = '' delete all before initialize
     container.innerHTML = '';
 
-    /* products is from the json archive */
+    //products is from the json archive
     products.forEach(product => {
         //Destructuring de objetos
         const {category, name, price, image} = product;
@@ -58,26 +59,23 @@ UI.prototype.loadProducts = function (){
 }
 
 UI.prototype.addButton = function(){
-
-    /* Select all products */    
+    //Select all the products
     const articles = document.querySelectorAll('.product');
 
     articles.forEach(article =>{
         const addtoCartButton = article.querySelector('.product__button');
         
         addtoCartButton.addEventListener('click', () =>{
-            //Dissapear add to cart button to create the new one
+            //Dissapear add to cart button to create the quantity button
             addtoCartButton.style.display = 'none';
     
             const imgContainer = article.querySelector('.img-container');
             const quantityButtonExist = imgContainer.querySelector('.product__button--active');
 
-            //If button exist we don't create a new one instead just display the inline style atrribuite
+            //If button exist we don't create a new one instead just display the inline style atrribute
             if(quantityButtonExist){  
                 quantityButtonExist.style.display = 'inline';
-               
                 getProduct(article);
-       
             }
 
             //Create a new button if doesn't exist
@@ -172,10 +170,7 @@ Cart.prototype.decrement = function(){
 }
 
 getProduct = function(article) { 
-
-    //esto esta bien
-    /* la funcion getProduct está tomando datos del HTML y luego creando un nuevo objeto Cart con esos datos. Eso no tiene sentido que sea un método de Cart.prototype, porque aún no tienes ningún Cart. De hecho, lo usas para crear uno. */
-
+    /* take the data from the html to create an object */
     const infoProduct = {
         name: article.querySelector('.information__name').textContent,
         category: article.querySelector('.information__tag').textContent,
@@ -191,13 +186,10 @@ getProduct = function(article) {
     //Aqui agregamos el primer CartTotal
     cartTotal.push(cartItem);    
         ui.cartHTML();
-     
-
     }    
 }
 
 UI.prototype.cartHTML = function(){
-    const cartContainer = document.querySelector('.cart');
     const cartImage = document.querySelector('.cart__image');
     const cartMessage = document.querySelector('.cart__message');
     const cartList = document.querySelector('.cart__list');
@@ -211,10 +203,9 @@ UI.prototype.cartHTML = function(){
         cartMessage.style.display = 'none';
     }
 
-    if(cartList.querySelectorAll('.purchase')){
+    //Delete the content of the cart all the time we add new content to avoid duplicate content
+    if(cartList.querySelectorAll('.purchase').length > 0){
         cartList.querySelectorAll('.purchase').forEach(el => el.remove());
-        
- 
     }
     
 
@@ -222,7 +213,6 @@ UI.prototype.cartHTML = function(){
 
     totalItems += product.number;
     
-
     const cartNumber = document.querySelector('.cart__number');
     cartNumber.textContent = totalItems;
 
@@ -246,11 +236,6 @@ UI.prototype.cartHTML = function(){
     purchaseSubtotal.classList.add('purchase__subtotal');
 
     total += product.subtotal;
-    /* 
-    const purchaseTotal = document.createElement('P');
-    purchaseTotal.textContent = `$${total}` 
-    purchaseTotal.classList.add('purchase__total'); */
-
 
     const purchaseQuit = document.createElement('IMG');
     purchaseQuit.src = '../assets/images/icon-remove-item.svg';
@@ -265,7 +250,6 @@ UI.prototype.cartHTML = function(){
         //filter all the products of cartTotal.name that are diferent compared to productQuit, 
         cartTotal = cartTotal.filter( product => product.name != productQuit);
               ui.cartHTML();
-
 
          articles.forEach( article =>{
             if(article.querySelector('.information__name').textContent == productQuit){
@@ -300,10 +284,6 @@ UI.prototype.cartHTML = function(){
     purchase.appendChild(purchaseSubtotal);
     /* purchase.appendChild(purchaseTotal); */
     purchase.appendChild(purchaseQuit);
-    
-   /*  purchase.classList.add('purchase__name');
-    purchase.textContent = product.name; */
-    
     cartItem.appendChild(purchase);
 
     ui.createTotal(total);
@@ -311,8 +291,6 @@ UI.prototype.cartHTML = function(){
 
   })
 }
-
-
 
 
 UI.prototype.createTotal = function(total){
@@ -389,7 +367,13 @@ UI.prototype.createButton = function(){
         
 }
 
+
 UI.prototype.orderConfirmation = function(){
+
+    if(document.querySelector('.order')){
+        return;
+    }
+
     const orderDiv = document.createElement('DIV');
     orderDiv.classList.add('order');
 
@@ -422,7 +406,7 @@ UI.prototype.orderConfirmation = function(){
     totalContainer.innerHTML = `
         <div class = confirmed__total>
                 <p class = 'confirmed__totalText'> Order Total </p>
-                <p class = 'confirmed__totalQuantity'> $${total} </p> 
+                <p class = 'confirmed__totalQuantity'> $${total.toFixed(2)} </p> 
         </div> 
     `
     store = document.querySelector('.store');
@@ -444,26 +428,32 @@ UI.prototype.orderConfirmation = function(){
         })
     })
 
+   
     const buttonNewOrden = document.createElement('BUTTON');
     buttonNewOrden.classList.add('button__confirmed', 'confirmButton__button');
     buttonNewOrden.textContent = 'Start New Order';
 
     buttonNewOrden.addEventListener('click', ()=> ui.resetPage(orderDiv, productsDiv, asideDiv))
 
-
-
+ 
     const productsDiv = document.querySelector('.products');
     const asideDiv = document.querySelector('.cart');
     orderDiv.appendChild(buttonNewOrden);
 
+    
 
+    const mediaQuery = window.matchMedia('(min-width: 768px)');
+
+    if(mediaQuery.matches){
+        store.classList.add('store-filter')
+    } else{
     productsDiv.style.display = 'none';
     asideDiv.style.display = 'none';
 
+    }
+
 
 }
-
-
 UI.prototype.resetPage = function(order, productsDiv, asideDiv){
 
 
@@ -481,6 +471,7 @@ UI.prototype.resetPage = function(order, productsDiv, asideDiv){
         ui.resetNumbers();
         ui.loadProducts();
         ui.cartHTML();
+        
         productsDiv.style.display = 'grid';
         asideDiv.style.display = 'block';
     },3000)
@@ -495,6 +486,8 @@ UI.prototype.resetNumbers = function(){
 
     document.querySelector('.cart__image').style.display = 'block';
     document.querySelector('.cart__message').style.display = 'block';
+    document.querySelector('.store').classList.remove('store-filter')
+
 }
 
 
